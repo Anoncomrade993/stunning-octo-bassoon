@@ -15,13 +15,13 @@ jobs:
         run: sudo apt install gobuster -y
 
       - name: Clone SecLists
-        run: git clone --depth 1 https://github.com/danielmiessler/SecLists
+        run: git clone --depth 1 https://github.com/danielmiessler/SecLists /tmp/SecLists
 
       - name: Run Scan
         run: |
           gobuster dir \
             -u ${{ github.event.inputs.target }} \
-            -w SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt \
+            -w /tmp/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt \
             -t 50 \
             -o results.txt
 
