@@ -1,0 +1,32 @@
+name: Gobuster Scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target URL'
+        required: true
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Gobuster
+        run: sudo apt install gobuster -y
+
+      - name: Clone SecLists
+        run: git clone --depth 1 https://github.com/danielmiessler/SecLists
+
+      - name: Run Scan
+        run: |
+          gobuster dir \
+            -u ${{ github.event.inputs.target }} \
+            -w SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt \
+            -t 50 \
+            -o results.txt
+
+      - name: Upload Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: gobuster-results
+          path: results.txt
